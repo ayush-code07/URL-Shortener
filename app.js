@@ -3,7 +3,6 @@ const app = express()
 const { rateLimit } = require('express-rate-limit')
 const dotenv = require('dotenv')
 const path = require('path')
-const db = require('./db')
 const { access } = require('fs')
 
 app.use(express.urlencoded({ extended: true }))
@@ -14,8 +13,13 @@ const limiter = rateLimit({
     limit: 100
 })
 
+console.log(process.env.DB_HOST)
+
 dotenv.config()
 // app.use(limiter)
+
+
+const db = require('./db') // yeh wali line dotenv.config() ke baad honi chahiye take env variable load ho jaye aur db.js me use ho sake.
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
