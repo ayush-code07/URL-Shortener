@@ -13,18 +13,15 @@ const limiter = rateLimit({
     limit: 100
 })
 
-console.log(process.env.DB_HOST)
-
 dotenv.config()
 // app.use(limiter)
-
 
 const db = require('./db') // yeh wali line dotenv.config() ke baad honi chahiye take env variable load ho jaye aur db.js me use ho sake.
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
-const port = process.env.port || 3000
+const port = process.env.PORT || 3000
 
 app.get('/', (req, res) => {
     res.render('index')
@@ -43,7 +40,7 @@ app.post('/shorten', async (req, res) => {
         else {
             const shortCode = Math.random().toString(36).substring(2, 8);
             
-            await db.execute('INSERT INTO urls (url, shortCode, createdAt, updatedAt, accessCount) VALUES (?, ?, ?, ?, ?)', [originalUrl, shortCode, new Date(), new Date(), 0]);
+            await db.execute('INSERT INTO urls (id, url, shortCode, createdAt, updatedAt, accessCount) VALUES (?, ?, ?, ?, ?, ?)', [1, originalUrl, shortCode, new Date(), new Date(), 0]);
             // res.render('shortenedURL', { shortCode });
             const fullUrl = req.protocol + '://' + req.get('host') + '/shorten/' + shortCode;
             res.render('shortenedURL', { shortCode, fullUrl });
